@@ -87,7 +87,7 @@ Once Ubuntu is installed, reboot the nodes.
 #### <a id="modifying-etc-hosts"></a>Modifying /etc/hosts
 To facilitate terminal access to your nodes and simplify use of Ansible (but avoid the need to set up a DNS), we recommend adding your node hosts to your management machine's /etc/hosts file, per the following example. This can be done using:
 
-```
+```bash
 sudo atom /etc/hosts
 ```   
 Example:
@@ -107,7 +107,7 @@ Once changes are made, save the /etc/hosts file, then logout and back into your 
 
 Test that you can ssh into your node machines with your password:
 
-```
+```bash
 user@management-machine-hostname:~$ ssh k8suser@k8smaster
 k8suser@k8smaster's password: <your password>
 Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.4.0-116-generic x86_64)
@@ -136,7 +136,7 @@ Create an ssh key, following the guidance in [this tutorial](https://www.digital
 Using the same tutorial as guide, copy your key to each node, providing your password as requested:
 
 Example:
-```
+```bash
 ssh-copy-id k8suser@k8smaster  
 ```
 Copy the key to each Kubernetes node machine in the same way.
@@ -146,14 +146,14 @@ You should now test to see that you can log in to your machines as follows, with
 
 Example:
 
-```
+```bash
 ssh k8suser@k8smaster  
 ```
 
 ### <a name="deploying-k8s"></a>Deploying Kubernetes  
 You can now initiate Ansible deployment of your Kubernetes cluster from the toplevel of the folder **kubernetes-ansible-example** as follows:
 
-```
+```bash
 cd kubernetes-ansible-example  
 ansible-playbook --ask-become-pass top.yml   
 ```
