@@ -1,0 +1,12 @@
+---
+
+- name: join workers
+  vars:
+    join_command: "{{ lookup('file', '/home/kubeuser/myk8s/current_cluster/kubeadm-init.txt') }}"
+  shell: "{{ join_command.stdout_lines[-1] }}"  
+  register: out
+
+- debug: var=out.stdout_lines
+
+...
+

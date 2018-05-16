@@ -1,0 +1,21 @@
+---
+- name: reset Kubernetes master (just in case)
+  command: kubeadm reset
+  register: out
+
+- debug: var=out.stdout_lines
+
+- name: initialize Kubernetes master
+  command: kubeadm init
+  register: out
+
+- debug: var=out.stdout_lines
+
+- name: create local file with info returned by kubeadm init
+  local_action: copy content="{{ out }}" dest="./current_cluster/kubeadm-init.txt"
+
+
+
+...
+
+

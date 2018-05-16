@@ -1,0 +1,23 @@
+---
+- hosts:
+  - k8smaster
+  - k8sworker1
+  - k8sworker2
+  become: true
+  roles:
+  - configure-nodes
+
+- hosts: k8smaster
+  become: true
+  roles:
+  - create-k8s-master
+  - install-weave
+  - wrapup
+
+- hosts:
+  - k8sworker1
+  - k8sworker2
+  become: true
+  roles:
+  - join-workers
+...

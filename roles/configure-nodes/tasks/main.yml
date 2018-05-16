@@ -1,0 +1,139 @@
+---
+- name: create .exrc idempotent
+  copy: content="set nocompatible\nset backspace=2\n" dest=.exrc
+
+- name: turn swap off
+  command: swapoff -a
+
+- name: comment out swap line in /etc/fstab idempotent
+  lineinfile:
+    path: /etc/fstab 
+    backup: yes
+    backrefs: yes
+    regexp: '(^(?!#).*swap *sw.*$)'
+    line: '# \1'
+
+- name: reboot server
+  shell: 'sleep 1 && shutdown -r now "Rebooting to ensure swap is off" && sleep 1'
+  async: 1
+  poll: 0
+  become: true
+
+- name: Wait for server to restart
+  wait_for_connection:
+
+- name: Pause a little more
+  pause:
+    minutes: 1
+
+- name: install libgetopt-mixed-perl for opsview agent
+  apt:
+    name: libgetopt-mixed-perl
+    state: present
+    update_cache: yes
+  tags:
+    - install_opsview_agent_pre_1
+
+- name: install libmcrypt4 for opsview agent
+  apt:
+    name: libmcrypt4
+    state: present
+    update_cache: yes
+  tags:
+    - install_opsview_agent_pre_2
+
+- name: install opsview agent 1
+  get_url:
+    url: https://s3.amazonaws.com/opsview-agents/ubuntu16/opsview-agent_5.4.1.172541017-1xenial1_amd64.deb
+    dest: .
+  tags:
+    - install_opsview_agent_1
+
+- name: install opsview agent 2
+  command: dpkg -i ./opsview-agent_5.4.1.172541017-1xenial1_amd64.deb
+  register: out
+  tags:
+    - install_opsview_agent_2
+
+- debug: var=out.stdout_lines
+
+- name: install opsview agent 3
+  command: apt-get install -f
+  args:
+    warn: no
+  register: out
+  tags:
+    - install_opsview_agent_3
+
+- debug: var=out.stdout_lines
+
+- name: Install docker.io
+  apt:
+    name: docker.io
+    state: present
+    update_cache: yes
+
+- name: rewrite /lib/systemd/system/docker.service
+  lineinfile:
+    path: /lib/systemd/system/docker.service
+    backup: yes
+    backrefs: yes
+    regexp: '(^ExecStart((?!-H tcp:\/\/0\.0\.0\.0:4243).)*)(\$DOCKER_OPTS$)'
+    line: '\1 -H tcp://0.0.0.0:4243 \3'
+
+- name: reload the daemon
+  command: systemctl daemon-reload
+
+- name: restart dockerd
+  service:
+    name: docker
+    state: restarted
+
+- name: install libwww-perl
+  apt:
+    name: libwww-perl
+    state: present
+
+- name: install apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: present
+
+- name: download and add Google GPG key
+  apt_key:
+    id: BA07F4FB
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: add Google repos to apt sources
+  shell:
+    cmd: |
+      cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+      deb http://apt.kubernetes.io/ kubernetes-xenial main
+      EOF
+
+- name: install kubelet, kubeadm, and kubectl
+  apt:
+    force_apt_get: yes
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    update_cache: yes
+
+- name: configure Kubernetes cgroup driver to match Docker's (cgroupfs)
+  lineinfile:
+    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    insertbefore: '^ExecStart'
+    firstmatch: yes
+    line: 'Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=cgroupfs"'
+    state: present
+
+- name: reload daemon
+  command: systemctl daemon-reload
+
+- name: restart kubelet
+  command: systemctl restart kubelet
+
+...
