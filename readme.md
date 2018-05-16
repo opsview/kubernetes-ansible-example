@@ -21,7 +21,7 @@ _This repo is not for production use in any context, and is not supported by Ops
 [Deploying Kubernetes](#deploying-k8s)     
 [Deployment Phases](#deployment-phases)
 [Engage kubectl proxy](#engage-proxy)    
-[Dashboard Access](#dashboard-access)
+[Dashboard Access](#dashboard-access)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Authenticating to the Dashboard](#auth-to-dash)    
 [Flight Checks](#flight-checks)  
 [Resources](#resources)  
