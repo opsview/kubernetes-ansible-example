@@ -19,7 +19,7 @@ _This repo is not for production use in any context, and is not supported by Ops
 &nbsp;&nbsp;&nbsp;&nbsp;[Modifying /etc/hosts](#modifying-etc-hosts)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Setting up Passwordless Access](#setting-up-passwordless-access)  
 [Deploying Kubernetes](#deploying-k8s)     
-[Deployment Phases](#deployment-phases)
+[Deployment Phases](#deployment-phases)  
 [Engage kubectl proxy](#engage-proxy)    
 [Dashboard Access](#dashboard-access)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Authenticating to the Dashboard](#auth-to-dash)    
