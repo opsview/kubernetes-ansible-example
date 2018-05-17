@@ -233,7 +233,11 @@ Accessing the Kubernetes Dashboard from your management or other VM requires a s
 ```
 ssh -L 9000:localhost:8080 k8suser@k8smaster
 ```
-... where 9000 is an unused port. Thereafter, you can bring up the Dashboard on your management machine's browser by opening a tab to localhost:9000
+... where 9000 is an unused port. Thereafter, you can bring up the Dashboard on your management machine's browser by opening a tab to localhost:9000 on the following path:
+
+```
+http://localhost:9000/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+```
 
 ###### <a name="auth-to-dash"></a>Authenticating to the Kubernetes Dashboard  
 To log into the Kubernetes Dashboard, the easiest method is to use bearer token authentication. The Ansible scripts retrieve a JSON payload containing (among other information) this bearer token for your administrative user, and save it in a local file: **kubernetes-ansible-example/current_cluster/bearer-token.txt**

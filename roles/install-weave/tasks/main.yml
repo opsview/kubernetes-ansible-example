@@ -8,19 +8,19 @@
 
 - name: set up regular kubectl user 1
   file:
-    path: /home/kubeuser/.kube
+    path: /home/k8suser/.kube
     state: directory
     mode: 0777
   tags:
     - setup_regular_user_1
 
 - name: set up regular kubectl user 2
-  shell: cp -i /etc/kubernetes/admin.conf /home/kubeuser/.kube/config
+  shell: cp -i /etc/kubernetes/admin.conf /home/k8suser/.kube/config
   tags:
     - setup_regular_user_2
 
 - name: set up regular kubectl user 3
-  shell: chmod 777 /home/kubeuser/.kube/config
+  shell: chmod 777 /home/k8suser/.kube/config
   args:
     warn: false
   tags:
