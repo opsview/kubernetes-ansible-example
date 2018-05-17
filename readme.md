@@ -182,7 +182,7 @@ The top.yml playbook begins by installing Python 2 on all nodes (not, strictly s
    - kubelet is restarted on each machine, and waits in a 'crashloop' (normal)  
 
 1. **The create-k8s-master role is executed on the k8smaster node** (see **kubernetes-ansible-example/create-k8s-master/tasks/main.yml**)  
- This involves executing **kubeadm init** on the master, creating the master node, then recovering kubeadm's output to preserve the returned **join** command that will later be used to join workers to the master node. The returned output is saved as .txt in the **kubernetes-ansible-example/current-cluster** directory. Note: the Weave CNI network that we install in step 3, below, does not require special parameterization of **kubeadm init** -- however, if you decide to change network fabrics, most of the other CNI network options do require parameters to be inserted here.  
+ This involves executing **kubeadm init** on the master, creating the master node, then recovering kubeadm's output to preserve the returned **kubeadm join** command that will later be used to join workers to the master node. The returned output is saved as .txt in the **kubernetes-ansible-example/current-cluster** directory. Note: the Weave CNI network that we install in step 3, below, does not require special parameterization of **kubeadm init** -- however, if you decide to change network fabrics, most of the other CNI network options do require parameters to be inserted here.  
 
 1. **The install-weave role is executed on the k8smaster node** (see **kubernetes-ansible-example/install-weave/tasks/main.yml**)  
  This involves making an iptables change required for Weave.Net, then setting up a new user (kubeuser) as a lower-permission user of kubectl -- doing this here so that associated .conf files can then be exported for use by the weave installer. Finally, the installer is applied, starting weave containers on the Kubernetes master node.
@@ -191,7 +191,7 @@ The top.yml playbook begins by installing Python 2 on all nodes (not, strictly s
  This role de-taints the master node to permit general workloads to run there. It then installs the Kubernetes Dashboard, creates a user context for authenticating to it, runs **kubectl kube-system describe secrets** to dump cluster secrets and parses out a so-called 'bearer token' that will serve as a password for logging into the Dashboard, saving this on the management machine's local file system (in **kubernetes-ansible-example/current-cluster**). Finally, it makes the non-administrative Kubernetes user able to call Docker without sudoing.
 
 1. **The join-workers role is executed on the k8sworker1 and k8sworker2 nodes** (see **kubernetes-ansible-example/join-workers/tasks/main.yml**)  
- Here, the **join** command returned by **kubeadm init** is extracted from returned output and executed on each of the worker nodes, joining it to the cluster.
+ Here, the **kubeadm join** command returned by **kubeadm init** is extracted from returned output and executed on each of the worker nodes, joining it to the cluster.
 
 ### <a name="engage-proxy"></a>Engage kubectl proxy
 The **kubectl** CLI includes a proxy that can be used to facilitate connections to the Kubernetes master node by remote machines, providing a convenient way of enabling:
