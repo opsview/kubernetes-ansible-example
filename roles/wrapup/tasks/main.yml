@@ -14,17 +14,17 @@
 
 - name: copy xxx.yaml and yyy.yaml to server for creating admin user for bearer token access to dashboard
   copy:
-    src: 
-    dest: /home/kubeuser
+    src:  ./files/
+    dest: /home/k8suser
 
 - name: create admin user 1
-  shell: export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl create -f /home/kubeuser/xxx.yml
+  shell: export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl create -f /home/k8suser/xxx.yml
   register: out
 
 - debug: var=out.stdout_lines
 
 - name: create admin user 2
-  shell: export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl create -f /home/kubeuser/yyy.yml
+  shell: export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl create -f /home/k8suser/yyy.yml
   register: out
 
 - debug: var=out.stdout_lines
@@ -39,7 +39,7 @@
   local_action: copy content="{{ out }}" dest="./current_cluster/bearer-token.txt"
 
 - name: set up docker not to require sudo
-  shell: gpasswd -a kubeuser docker
+  shell: gpasswd -a k8suser docker
   register: out
 
 - debug: var=out.stdout_lines

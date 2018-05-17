@@ -157,15 +157,16 @@ You can now initiate Ansible deployment of your Kubernetes cluster from the topl
 
 ```
 cd kubernetes-ansible-example  
-ansible-playbook --ask-become-pass top.yml   
+ansible-playbook -u k8suser -K top.yml   
 ```
+... executing the toplevel playbook file, 'top.yml,' as user k8suser.
 
 ### <a name="deployment-phases"></a>Deployment Phases  
 
-The deployment is carried out in several phases. To parse what's going on, it can be helpful to read the article _[Using kubeadm to Create a Cluster](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)_ carefully:
+The top.yml playbook begins by installing Python 2 on all nodes (not, strictly speaking, an Ansible requirement -- Ansible can use Python 3, which is installed by default on Ubuntu -- but part of "standard" Ansible deployment patterns). Thereafter, deployment is carried out in several phases, by roles. To parse what's going on, it can be helpful to read the article _[Using kubeadm to Create a Cluster](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)_ carefully:
 
 1. **The configure-nodes role is executed on all three nodes** (see **kubernetes-ansible-example/configure-nodes/tasks/main.yml**)
-   - The behavior of the vi editor is corrected for convenience.  
+   - The behavior of the vi editor is corrected for later convenience.  
    - Swap is turned off and the change made permanent.  
    - The server is restarted.
    - Opsview agent dependencies are installed.
