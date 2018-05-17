@@ -1,5 +1,22 @@
 ---
+- hosts: all
+  become: true
+  gather_facts: False
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
+- hosts: all
+  become: true
+  roles:
+  - configure-nodes
+
+- hosts: k8smaster
+  become: true
+  roles:
+  - create-k8s-master
+  - install-weave
+  - wrapup
 
 - hosts:
   - k8sworker1
