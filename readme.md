@@ -65,7 +65,7 @@ Install Ansible, then begin by cloning this repo to your home directory on your 
 
 ```  
 cd /home/(your home directory name)
-git clone https://github.com/whatever-it-turns-out-to-be
+git clone https://github.com/opsview/kubernetes-ansible-example.git
 ```
 
 This will create a folder called **kubernetes-ansible-example** from the top level of which you can execute the playbooks directly.
@@ -211,7 +211,7 @@ ssh k8suser@k8smaster
 kubectl proxy --port=8080 --address='0.0.0.0' --accept-hosts='^*$'
 ```
 
-This permits access to the Kubernetes master's entrypoint on port 8080 from machines on the local network. You can background the proxy, letting you log out of the terminal session, by appending ' &' to the above command.
+This permits access to the Kubernetes master's entrypoint on port 8080 from machines on the local network.
 
 Killing the kubectl proxy is done by finding the PID of the running kubectl process on the master node:
 
